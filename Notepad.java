@@ -1,9 +1,17 @@
 import java.awt.*;
 import java.awt.event.*;
+import java.io.BufferedReader;
+// import java.util.EventListener;
+import java.io.File;
+import java.io.FileReader;
+import java.io.InputStreamReader;
+
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
+public class Notepad extends JFrame implements ActionListener {
+    private JTextArea textarea;
 
-public class Notepad extends JFrame {
     public Notepad() {
 
         setTitle("Notepad");
@@ -26,17 +34,25 @@ public class Notepad extends JFrame {
          */
         JMenu file = new JMenu("File");
         JMenuItem newdoc = new JMenuItem("New File");
+        newdoc.addActionListener(this);
         newdoc.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, ActionEvent.CTRL_MASK));
         file.add(newdoc);
+
         JMenuItem open = new JMenuItem("Open File");
         open.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, ActionEvent.CTRL_MASK));
+        open.addActionListener(this);
         file.add(open);
+
         JMenuItem save = new JMenuItem("Save File");
         save.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, ActionEvent.CTRL_MASK));
+        save.addActionListener(this);
         file.add(save);
+
         JMenuItem print = new JMenuItem("Print File");
         print.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_P, ActionEvent.CTRL_MASK));
+        print.addActionListener(this);
         file.add(print);
+
         JMenuItem exit = new JMenuItem("Exit File");
         exit.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_W, ActionEvent.CTRL_MASK));
         file.add(exit);
@@ -53,12 +69,15 @@ public class Notepad extends JFrame {
         JMenuItem copy = new JMenuItem("Copy");
         copy.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C, ActionEvent.CTRL_MASK));
         edit.add(copy);
+
         JMenuItem cut = new JMenuItem("Cut");
         cut.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_X, ActionEvent.CTRL_MASK));
         edit.add(cut);
+
         JMenuItem paste = new JMenuItem("Paste");
         paste.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_V, ActionEvent.CTRL_MASK));
         edit.add(paste);
+
         JMenuItem selectall = new JMenuItem("Select All");
         selectall.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_A, ActionEvent.CTRL_MASK));
         edit.add(selectall);
@@ -76,7 +95,7 @@ public class Notepad extends JFrame {
         setJMenuBar(menubar);
 
         // !Creating the text area
-        JTextArea textarea = new JTextArea();
+        textarea = new JTextArea();
         textarea.setFont(new Font("SAN_SERIF", Font.PLAIN, 18));
         textarea.setLineWrap(true);
         textarea.setWrapStyleWord(true);
@@ -87,6 +106,40 @@ public class Notepad extends JFrame {
         add(pane);// ^ScrollBar + TextArea
 
         setVisible(true);// Should be visivle abfter all other components are rendered
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        // ^New File Action
+        if (e.getActionCommand().equals("New File"))
+            textarea.setText("");
+        // ^Open File Action
+        else if (e.getActionCommand().equals("Open File")) {
+            // & Opening File Manager to choose the file
+            JFileChooser chooser = new JFileChooser();
+            chooser.setAcceptAllFileFilterUsed(false);
+            FileNameExtensionFilter restrict = new FileNameExtensionFilter("Only .txt files", "txt");
+            chooser.addChoosableFileFilter(restrict);
+            int action = chooser.showOpenDialog(this);
+
+            // & If No File is choosen , Close the dialogebox and return
+            if (action != JFileChooser.APPROVE_OPTION) {
+                return;
+            }
+            // & Else Read the selected File
+            else {
+                File file = chooser.getSelectedFile();
+                try {
+                    BufferedReader read = new BufferedReader(new FileReader(file));
+
+                    textarea.read(read, null);
+
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
+
+        }
     }
 
     public static void main(String[] args) {
