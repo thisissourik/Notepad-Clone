@@ -14,6 +14,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 public class Notepad extends JFrame implements ActionListener {
     private JTextArea textarea;
+    private String text;
 
     public Notepad() {
 
@@ -58,6 +59,7 @@ public class Notepad extends JFrame implements ActionListener {
 
         JMenuItem exit = new JMenuItem("Exit File");
         exit.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_W, ActionEvent.CTRL_MASK));
+        exit.addActionListener(this);
         file.add(exit);
 
         // file.add(newdoc);
@@ -71,30 +73,35 @@ public class Notepad extends JFrame implements ActionListener {
         JMenu edit = new JMenu("Edit");
         JMenuItem copy = new JMenuItem("Copy");
         copy.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C, ActionEvent.CTRL_MASK));
+        copy.addActionListener(this);
         edit.add(copy);
 
         JMenuItem cut = new JMenuItem("Cut");
         cut.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_X, ActionEvent.CTRL_MASK));
+        cut.addActionListener(this);
         edit.add(cut);
 
         JMenuItem paste = new JMenuItem("Paste");
         paste.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_V, ActionEvent.CTRL_MASK));
+        paste.addActionListener(this);
         edit.add(paste);
 
         JMenuItem selectall = new JMenuItem("Select All");
         selectall.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_A, ActionEvent.CTRL_MASK));
+        selectall.addActionListener(this);
         edit.add(selectall);
 
         menubar.add(edit);
         /*
-         * Help Button
-         * Options - Help
+         * About Button
+         * Options - About
          */
-        JMenu help = new JMenu("Help");
-        menubar.add(help);
-        JMenuItem hlp = new JMenuItem("Help");
-        hlp.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_H, ActionEvent.CTRL_MASK));
-        help.add(hlp);
+        JMenu about = new JMenu("About");
+        menubar.add(about);
+        JMenuItem Abt = new JMenuItem("About Developer");
+        Abt.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_D, ActionEvent.CTRL_MASK));
+        Abt.addActionListener(this);
+        about.add(Abt);
         setJMenuBar(menubar);
 
         // !Creating the text area
@@ -169,7 +176,24 @@ public class Notepad extends JFrame implements ActionListener {
                 // TODO Auto-generated catch block
                 e1.printStackTrace();
             }
+        } else if (e.getActionCommand().equals("Exit File")) {
+            System.exit(0);
+
+        } else if (e.getActionCommand().equals("Copy")) {
+            text = textarea.getSelectedText();
+        } else if (e.getActionCommand().equals("Paste")) {
+            textarea.insert(text, textarea.getCaretPosition());
+        } else if (e.getActionCommand().equals("Cut")) {
+            text = textarea.getSelectedText();
+            textarea.replaceRange("", textarea.getSelectionStart(), textarea.getSelectionEnd());
+        } else if (e.getActionCommand().equals("Select All")) {
+            textarea.selectAll();
         }
+        else if (e.getActionCommand().equals("About"))
+        {
+            
+        }
+
     }
 
     public static void main(String[] args) {
