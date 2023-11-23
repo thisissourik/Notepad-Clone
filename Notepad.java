@@ -189,9 +189,9 @@ public class Notepad extends JFrame implements ActionListener {
         } else if (e.getActionCommand().equals("Select All")) {
             textarea.selectAll();
         }
-        else if (e.getActionCommand().equals("About"))
+        else if (e.getActionCommand().equals("About Developer"))
         {
-            
+            new About().setVisible(true);
         }
 
     }
