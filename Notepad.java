@@ -1,9 +1,12 @@
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.print.PrinterException;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 // import java.util.EventListener;
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.InputStreamReader;
 
 import javax.swing.*;
@@ -139,6 +142,33 @@ public class Notepad extends JFrame implements ActionListener {
                 }
             }
 
+        } else if (e.getActionCommand().equals("Save File")) {
+            JFileChooser saveas = new JFileChooser();
+            // Saving the file
+            saveas.setApproveButtonText("Save");
+            int action = saveas.showOpenDialog(this);
+
+            if (action != JFileChooser.APPROVE_OPTION) {
+                return;
+            } else {
+                File filename = new File(saveas.getSelectedFile() + ".txt");
+                BufferedWriter outfile = null;
+                try {
+                    outfile = new BufferedWriter(new FileWriter(filename));
+                    textarea.write(outfile);
+
+                } catch (Exception ae) {
+                    ae.printStackTrace();
+
+                }
+            }
+        } else if (e.getActionCommand().equals("Print File")) {
+            try {
+                textarea.print();
+            } catch (PrinterException e1) {
+                // TODO Auto-generated catch block
+                e1.printStackTrace();
+            }
         }
     }
 
